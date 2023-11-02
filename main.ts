@@ -20,14 +20,39 @@ serial.onDataReceived(serial.delimiters(Delimiters.NewLine), function () {
     SerialData = serial.readUntil(serial.delimiters(Delimiters.NewLine))
     // This If statement checks that variable with the class name, and if it matches the class name you entered, it will activate the code within that block
     if (SerialData == "1") {
-        basic.showIcon(IconNames.Heart)
+        pins.digitalWritePin(DigitalPin.P0, 1)
+        basic.showString("1")
+        basic.pause(5000)
+        pins.digitalWritePin(DigitalPin.P0, 0)
     } else if (SerialData == "2") {
-        basic.showIcon(IconNames.Happy)
-    } else if (SerialData == "Class 3") {
-        basic.showIcon(IconNames.Meh)
-    } else {
-    	
+        pins.digitalWritePin(DigitalPin.P0, 1)
+        servos.P2.setAngle(90)
+        basic.showString("2")
+        basic.pause(5000)
+        servos.P2.setAngle(180)
+        pins.digitalWritePin(DigitalPin.P0, 0)
+    } else if (SerialData == "3") {
+        pins.digitalWritePin(DigitalPin.P0, 1)
+        servos.P2.setAngle(90)
+        basic.showString("3")
+        basic.pause(5000)
+        servos.P2.setAngle(180)
+        pins.digitalWritePin(DigitalPin.P0, 0)
     }
 })
 let SerialData = ""
 serial.redirectToUSB()
+basic.showIcon(IconNames.Yes)
+basic.clearScreen()
+basic.forever(function () {
+    if (Environment.sonarbit_distance(Environment.Distance_Unit.Distance_Unit_cm, DigitalPin.P5) < 10) {
+        pins.digitalWritePin(DigitalPin.P0, 1)
+    } else {
+        pins.digitalWritePin(DigitalPin.P0, 0)
+    }
+})
+basic.forever(function () {
+    basic.showString(serial.readString())
+    basic.pause(2000)
+    basic.clearScreen()
+})

@@ -4,7 +4,13 @@
     "dependencies": {
         "core": "*",
         "radio": "*",
-        "microphone": "*"
+        "microphone": "*",
+        "servo": "*",
+        "cutebot": "github:elecfreaks/pxt-cutebot#v6.1.13",
+        "Grove": "github:seeed-studio/pxt-grove#v0.5.0",
+        "microturtle": "github:microsoft/pxt-microturtle#v0.0.9",
+        "Environment-and-Science-IoT": "github:tinkertanker/pxt-iot-environment-kit#v5.2.2",
+        "pxt-sonar": "github:microsoft/pxt-sonar#v0.0.5"
     },
     "files": [
         "main.blocks",
