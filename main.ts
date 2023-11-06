@@ -1,5 +1,4 @@
 function clear () {
-    basic.showString("screen cleaning")
     basic.pause(100)
     basic.clearScreen()
     strip.clear()
@@ -10,39 +9,41 @@ function clear () {
  */
 // This block listens to the website for your class names, and saves them as a variable
 serial.onDataReceived(serial.delimiters(Delimiters.NewLine), function () {
-    basic.showString("Your Device Connected")
-    basic.pause(2000)
     SerialData = serial.readUntil(serial.delimiters(Delimiters.NewLine))
     // This If statement checks that variable with the class name, and if it matches the class name you entered, it will activate the code within that block
-    if (SerialData == "1") {
-        show_title()
-        pins.digitalWritePin(DigitalPin.P0, 1)
+    if (SerialData == "biowaste") {
+        servos.P1.setAngle(45)
         basic.pause(5000)
-        pins.digitalWritePin(DigitalPin.P0, 0)
-    } else if (SerialData == "2") {
+        servos.P1.setAngle(90)
+        servos.P1.stop()
+    } else if (SerialData == "recycle") {
         show_title()
-        pins.digitalWritePin(DigitalPin.P0, 1)
+        pins.digitalWritePin(DigitalPin.P2, 1)
         basic.pause(5000)
-        pins.digitalWritePin(DigitalPin.P0, 0)
-    } else if (SerialData == "3") {
+        pins.digitalWritePin(DigitalPin.P2, 0)
+    } else if (SerialData == "dangerous") {
         show_title()
-        pins.digitalWritePin(DigitalPin.P0, 1)
+        pins.digitalWritePin(DigitalPin.P3, 1)
         basic.pause(5000)
-        pins.digitalWritePin(DigitalPin.P0, 0)
-    } else if (SerialData == "4") {
+        pins.digitalWritePin(DigitalPin.P3, 0)
+    } else if (SerialData == "normalwaste") {
         show_title()
-        pins.digitalWritePin(DigitalPin.P0, 1)
+        pins.digitalWritePin(DigitalPin.P4, 1)
         basic.pause(5000)
-        pins.digitalWritePin(DigitalPin.P0, 0)
+        pins.digitalWritePin(DigitalPin.P4, 0)
     }
 })
 function show_title () {
-    basic.showString("loading..")
-    basic.pause(500)
-    basic.showString(SerialData)
     strip.showColor(neopixel.colors(NeoPixelColors.Green))
     strip.show()
     basic.pause(500)
+    basic.showLeds(`
+        # # # # #
+        # . # . #
+        # # # # #
+        # # . . #
+        # . # . .
+        `)
     clear()
 }
 /**
@@ -50,22 +51,16 @@ function show_title () {
  */
 let SerialData = ""
 let strip: neopixel.Strip = null
-strip = neopixel.create(DigitalPin.P0, 30, NeoPixelMode.RGB)
+strip = neopixel.create(DigitalPin.P5, 30, NeoPixelMode.RGB)
 serial.redirectToUSB()
-basic.showString("TenKeed Bin Starting")
-basic.showIcon(IconNames.Yes)
-basic.pause(1000)
-strip.showColor(neopixel.colors(NeoPixelColors.White))
 clear()
 basic.forever(function () {
-    if (Environment.sonarbit_distance(Environment.Distance_Unit.Distance_Unit_cm, DigitalPin.P5) < 10) {
-        strip.showColor(neopixel.colors(NeoPixelColors.Green))
+    if (grove.measureInInchesV2(DigitalPin.P6) > 1) {
+        strip.showColor(neopixel.colors(NeoPixelColors.White))
         strip.show()
-        basic.showString("opening")
-        pins.digitalWritePin(DigitalPin.P0, 1)
+        servos.P0.setAngle(90)
         basic.pause(5000)
-        basic.showString("closing")
-        pins.digitalWritePin(DigitalPin.P0, 0)
+        servos.P0.setAngle(90)
         clear()
     }
 })
